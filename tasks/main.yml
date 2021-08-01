@@ -1,0 +1,48 @@
+---
+- name: add minio group
+  group:
+    name: minio
+    system: yes
+
+- name: add minio user
+  user:
+    name: minio
+    system: yes
+    create_home: no
+    shell: /sbin/nologin
+
+- name: download minio binary
+  get_url:
+    url: https://dl.min.io/server/minio/release/linux-amd64/minio
+    dest: /usr/local/bin/minio
+    owner: minio
+    group: minio
+    mode: '0755'
+
+- name: create necessary directories
+  file:
+    state: directory
+    path: '{{ item }}'
+    owner: minio
+    group: minio
+    mode: '0755'
+  with_items:
+    - /var/log/minio
+    - '{{ minio_home_path }}'
+
+- name: add default values
+  template:
+    src: minio.defaults.j2
+    dest: /etc/default/minio
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: add systemd unit file
+  template:
+    src: minio.service.j2
+    dest: /lib/systemd/system/minio.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: enable and start minio

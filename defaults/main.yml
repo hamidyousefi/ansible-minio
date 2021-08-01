@@ -1,0 +1,5 @@
+---
+minio_home_path: /usr/local/share/minio
+minio_access_key: 'minio-access-key'
+minio_secret_key: 'minio-secret-key'
+minio_exposing_port: 9000
