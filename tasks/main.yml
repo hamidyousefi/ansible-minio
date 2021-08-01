@@ -18,6 +18,9 @@
     owner: minio
     group: minio
     mode: '0755'
+  environment:
+    http_proxy: '{{ proxy.http }}'
+    https_proxy: '{{ proxy.https | default(proxy.http) }}'
 
 - name: create necessary directories
   file:
